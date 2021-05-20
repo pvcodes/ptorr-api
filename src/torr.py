@@ -1,5 +1,6 @@
 from os import listdir
 import os
+import re
 from bs4 import BeautifulSoup
 import requests
 
@@ -9,8 +10,6 @@ class Torrent:
         self.session = requests.session()
         self.basePATH = os.getcwd()
         self.CREDENTIALS = {
-            #
-            #
             # 'uid': os.getenv('UNAME'),
             # 'pwd': os.getenv('PSWRD')
             'uid': os.environ.get('UNAME'),
@@ -74,15 +73,7 @@ class Torrent:
             if file.endswith(".torrent"):
                 os.remove(os.path.join(self.basePATH, file))
 
-        url = f'{self.indexURL}topics&id={id}'
-        try:
-            s = self.session.get(url, allow_redirects=True)
-            soup = BeautifulSoup(s.text, 'html.parser')
-            title = soup.find('h3', {'class': 'torrent-title text-primary'})
-            title = title.get_text()
-            print(title)
-        except Exception as e:
-            print(e)
+        title = self.getTitle(id)
 
         # Downloading the torrent
         url = f'{self.baseURL}download.php?id={id}'
@@ -102,3 +93,29 @@ class Torrent:
             print('\nFile Saving Failed......\n')
             print(e)
         return title
+
+    def getRecent(self):
+        self.login()
+        s = self.session.post(self.baseURL)
+        resObj = {'_status': 'OK', 'result': []}
+        soup = BeautifulSoup(s.text, 'html.parser')
+        a = soup.find('ul', {'id': 'crazysl'})
+        allTorr = a.findAll('a')
+        for i in allTorr:
+            id = i['tfid']
+            title = self.getTitle(id)
+            resObj['result'].append({'title': title, 'id': id})
+        return resObj
+
+    def getTitle(self, id: str):
+        url = f'{self.indexURL}topics&id={id}'
+        try:
+            s = self.session.get(url, allow_redirects=True)
+            soup = BeautifulSoup(s.text, 'html.parser')
+            title = soup.find('h3', {'class': 'torrent-title text-primary'})
+            title = title.get_text()
+            return title
+        except Exception as e:
+            # print(e)
+            return None
+# />

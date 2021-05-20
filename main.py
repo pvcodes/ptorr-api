@@ -16,9 +16,18 @@ def root():
     return render_template('index.html')
 
 
+@app.route('/key=<string:keyword>&maxCount=<string:cnt>')
+@app.route('/k=<string:keyword>&mx=<string:cnt>')
 @app.route('/key=<string:keyword>')
-def getTorr(keyword):
+@app.route('/k=<string:keyword>')
+def getTorr(keyword, cnt='15'):
+    cnt = int(cnt)
+    if cnt <= 0:
+        return jsonify({'_status': 'OK', 'result': []})
     val = pvcodes.get_Torr(keyword)
+    if len(val['result']) > cnt:
+        val['result'] = val['result'][:cnt]
+    print(len(val['result']))
     return jsonify(val)
 
 
@@ -34,6 +43,13 @@ def getor(id: str):
         return jsonify(obj)
     else:
         return send_from_directory(pvcodes.basePATH, f'{val}.torrent', as_attachment=True)
+
+
+@app.route('/recent')
+@app.route('/r')
+def getRecnt():
+    obj = pvcodes.getRecent()
+    return jsonify(obj)
 
 
 @app.errorhandler(404)

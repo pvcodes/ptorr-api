@@ -9,6 +9,13 @@ body {
   min-height: 100%;
 }
 
+@media screen and (max-width: 600px) {
+  .main-content {
+    /* Awipply some styles */
+    width: auto;
+  }
+}
+
 pre {
   background-color: ghostwhite;
   border: 1px solid silver;
