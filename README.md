@@ -2,6 +2,8 @@
 <p>
 Welcome to <a href='https://ptorr-api.herokuapp.com/'><b>PTORR-API</b></a>, a RESTful API for torrents!
 
+**NOTE:**
+ This Project is just for educational purpose (of mine), It doesn't encourage the pirated content avaiable on the internet! 
 
 </p>
 
