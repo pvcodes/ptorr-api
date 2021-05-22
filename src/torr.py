@@ -1,12 +1,6 @@
-from enum import Flag
-from reprlib import recursive_repr
-from traceback import print_tb
-from matplotlib.pyplot import title
 from numpy import double
-import imp
 from os import listdir
 import os
-import re
 from bs4 import BeautifulSoup
 import requests
 

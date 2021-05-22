@@ -22,8 +22,10 @@ var keyword = {
   _status: "OK",
   result: [
     {
-      id: "torrent-id",
-      title: "torrent-title",
+      id: "torr-id",
+      title: "torr-title",
+      size: "torr's size",
+      imdb: "torr imdb link",
     },
   ],
 };

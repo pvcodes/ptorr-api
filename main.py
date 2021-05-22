@@ -1,4 +1,4 @@
-from os import listdir, set_blocking
+from os import listdir
 from flask import Flask, jsonify, send_from_directory, render_template, url_for
 import os
 
@@ -17,8 +17,9 @@ def root():
 
 
 @app.route('/key=<string:keyword>&maxCount=<string:cnt>')
+@app.route('/key=<string:keyword>&mx=<string:cnt>')
+@app.route('/k=<string:keyword>&maxCount=<string:cnt>')
 @app.route('/k=<string:keyword>&mx=<string:cnt>')
-@app.route('/key=<string:keyword>')
 @app.route('/k=<string:keyword>')
 def getTorr(keyword, cnt='15'):
     cnt = int(cnt)
