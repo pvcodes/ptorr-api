@@ -1,5 +1,7 @@
+# Avi ki hai
 from numpy import double
 from os import listdir
+import re
 import os
 from bs4 import BeautifulSoup
 import requests
@@ -7,6 +9,7 @@ import requests
 
 class Torrent:
     def __init__(self):
+
         self.session = requests.session()
         self.basePATH = os.getcwd()
         self.CREDENTIALS = {
@@ -55,14 +58,14 @@ class Torrent:
                 {'message': f'No torrent found for key={key}'})
 
         for r in results:
-            size, imdb_id = self.getInfo(r['tfid'])
-            if imdb_id:
-                imdb_id = f'https://www.imdb.com/title/tt{imdb_id}'
+            # size, imdb_id = self.getInfo(r['tfid'])
+            # if imdb_id:
+            #     imdb_id = f'https://www.imdb.com/title/tt{imdb_id}'
             resObj['result'].append({
                 'title': f'{r.text}',
                 'id': f'{r["tfid"]}',
-                'size': size,
-                'imdb': imdb_id
+                # 'size': size,
+                # 'imdb': imdb_id
             })
 
         return resObj
@@ -108,14 +111,14 @@ class Torrent:
         for i in allTorr:
             id = i['tfid']
             title = self.getTitle(id)
-            size, imdb_id = self.getInfo(id)
-            if imdb_id:
-                imdb_id = f'https://www.imdb.com/title/tt{imdb_id}'
+            # size, imdb_id = self.getInfo(id)
+            # if imdb_id:
+            #     imdb_id = f'https://www.imdb.com/title/tt{imdb_id}'
             resObj['result'].append({
                 'title': title,
                 'id': id,
-                'size': size,
-                'imdb': imdb_id
+                # 'size': size,
+                # 'imdb': imdb_id
             })
         return resObj
 
@@ -131,44 +134,44 @@ class Torrent:
             # print(e)
             return None
 
-    def getInfo(self, id: str):
-        url = f'{self.indexURL}topics&id={id}'
-        try:
-            s = self.session.get(url, allow_redirects=True)
+#     def getInfo(self, id: str):
+#         url = f'{self.indexURL}topics&id={id}'
+#         try:
+#             s = self.session.get(url, allow_redirects=True)
 
-            soup = BeautifulSoup(s.text, 'html.parser')
+#             soup = BeautifulSoup(s.text, 'html.parser')
 
-            plot = soup.find('div', {'id': 'imdb-block', })
+#             plot = soup.find('div', {'id': 'imdb-block', })
 
-            imdb_id = None
-            scripts = soup.findAll('script')
-            for s in scripts:
-                if '$(document)' in str(s):
-                    imdb_id = ''
-                    for c in str(s):
-                        if c.isdigit():
-                            imdb_id += c
-                    break
+#             imdb_id = None
+#             scripts = soup.findAll('script')
+#             for s in scripts:
+#                 if '$(document)' in str(s):
+#                     imdb_id = ''
+#                     for c in str(s):
+#                         if c.isdigit():
+#                             imdb_id += c
+#                     break
 
-            fileSizes = soup.select('div.col-md-2.details-files-filesize')
-            size = 0
-            for i in fileSizes:
-                i = i.get_text()
-                size += sizeInMB(i)
-            return (str(round(size, 2))+' GB'), imdb_id
-        except Exception as e:
-            # print(e)
-            print('RR')
-            return None, None
+#             fileSizes = soup.select('div.col-md-2.details-files-filesize')
+#             size = 0
+#             for i in fileSizes:
+#                 i = i.get_text()
+#                 size += sizeInMB(i)
+#             return (str(round(size, 2))+' GB'), imdb_id
+#         except Exception as e:
+#             # print(e)
+#             print('RR')
+#             return None, None
 
 
-def sizeInMB(i: str):
-    l = len(i)-2
-    sz = i[l:]
-    i = i[: -2]
-    i = double(i)
-    if sz == 'MB':
-        i /= 1024
-    elif sz == 'KB':
-        i /= 1024*1024
-    return i
+# def sizeInMB(i: str):
+#     l = len(i)-2
+#     sz = i[l:]
+#     i = i[: -2]
+#     i = double(i)
+#     if sz == 'MB':
+#         i /= 1024
+#     elif sz == 'KB':
+#         i /= 1024*1024
+#     return i
