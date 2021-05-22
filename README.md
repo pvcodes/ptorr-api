@@ -117,7 +117,10 @@ Submit an issue on GitHub and add as much information as you can about the bug, 
     "result": [
         {
             "id": "torr-id",
-            "title": "torr-tile"
+            "title": "torr-tile",
+            "size": "torr-size",
+            "imdb": "torr's imdb link"
+    
         }
     ]
 }
