@@ -20,6 +20,7 @@ def root():
 @app.route('/key=<string:keyword>&mx=<string:cnt>')
 @app.route('/k=<string:keyword>&maxCount=<string:cnt>')
 @app.route('/k=<string:keyword>&mx=<string:cnt>')
+@app.route('/key=<string:keyword>')
 @app.route('/k=<string:keyword>')
 def getTorr(keyword, cnt='15'):
     cnt = int(cnt)
