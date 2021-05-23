@@ -3,7 +3,7 @@
 Welcome to <a href='https://ptorr-api.herokuapp.com/'><b>PTORR-API</b></a>, a RESTful API for torrents!
 
 **NOTE:**
- This Project is just for educational purpose (of mine), It doesn't encourage the pirated content avaiable on the internet! 
+This Project is just for educational purpose (of mine), It doesn't encourage the pirated content avaiable on the internet!
 
 </p>
 
@@ -14,6 +14,7 @@ Welcome to <a href='https://ptorr-api.herokuapp.com/'><b>PTORR-API</b></a>, a RE
 - [Modules used](#Stack)
 - [Route Methods](#Methods)
 - [To contribute to the project](#How-to-contribute)
+
 ## Hosting the API locally:
 
 **NOTE**: To replicate, you will need **CREDENTIALS**. Go get yours at by signing up [here](https://www.chd4.com/) (If you need help with this step, feel free to ask for help in our [Support Server](https://discord.gg/FjVVkTtbgp)
@@ -33,11 +34,13 @@ PSWRD=<your password>
 pipenv install
 ```
 
-- Enjoy! 
+- Enjoy!
 - You may do bug-reporting or ask for help in on the SupportServer... or just open an issue on this repo.
+
 ## How to set up the development environment
 
 #### Requirements:
+
 - git
 - pip
 - python `3.8.6` or higher
@@ -54,11 +57,9 @@ pipenv install
    \- For downloading more libraries, use `pipenv install <package-name>`\
    \- If you're adding any development-dependencies, use-> `pipenv install <package-name> --dev`\
 
-
 ## How to contribute
 
 Before contributing, here is some information that might help your **PR (Pull Request)** get merged.
-
 
 **Note**: For more detailed information about how to contribute, please refere to the [CONTRIBUTING.md](docs/CONTRIBUTING.md) file.
 
@@ -109,24 +110,45 @@ Submit an issue on GitHub and add as much information as you can about the bug, 
 - BeautifulSoup4
 
 ## Methods
+
 ### Response Object Example:
+
 - #### SUCCESS RESPONSE
+
 ```text
+For /key method
 {
    "_status": "OK",
     "result": [
         {
             "id": "torr-id",
             "title": "torr-tile",
+
+        }
+    ]
+}
+```
+
+```text
+For /info method
+{
+   "_status": "OK",
+    "result": [
+        {
+            "title": "torr-tile",
             "size": "torr-size",
-            "imdb": "torr's imdb link"
-    
+            "imdb": "torr's imdb link",
+            "plot" : "torr's plot",
+            "director":[],
+            "writer":[],
+            "cast":[]
         }
     ]
 }
 ```
 
 - #### ERROR RESPONSE
+
 ```text
 {
    "_status": "ERROR",
@@ -136,74 +158,83 @@ Submit an issue on GitHub and add as much information as you can about the bug, 
 }
 ```
 
+## **&#10158; Get Torrs :**
 
+Returns json data containing the torr id's and title's.
 
-**&#10158; Get Torrs :**
-----
-  Returns json data containing the torr id's and title's.
-
-* **URL**
+- **URL**
 
   /key=keyword&maxCount=max_reponse_object
 
-* **Method:**
+- **Method:**
 
   `GET`
-  
-*  **URL Params**
 
-   **Required:**
- 
-   `keyword=[string]` or `k=[string]`
+- **URL Params**
 
-   **Optional:**
-   
-   `maxCount=[integer]` or `mx=[integer]`
+  **Required:**
 
-**&#10158; Get Recent Torrs :**
-----
-  Returns json data containing the torr id's and title's.
+  `keyword=[string]` or `k=[string]`
 
-* **URL**
+  **Optional:**
 
-  /recent or /r 
+  `maxCount=[integer]` or `mx=[integer]`
 
-* **Method:**
+## **&#10158; Get Recent Torrs :**
 
-  `GET`
-  
-*  **URL Params**
-   
-   - No Params required. 
+Returns json data containing the torr id's and title's.
 
-**&#10158; Download Torr :**
-----
-  Returns a torrent file to 
+- **URL**
 
-* **URL**
+  /recent or /r
 
-  /getorr-torr-id   
-
-* **Method:**
+- **Method:**
 
   `GET`
-  
-*  **URL Params**
 
-   **Required**
-   
-   `torr-id=[string]`
+- **URL Params**
 
+  - No Params required.
 
-* **Example**
+## **&#10158; Get Torrs Info :**
 
-   ![Alt Text](https://user-images.githubusercontent.com/54075838/118957373-18eaf000-b97e-11eb-9f2a-6bf98432cfd7.gif)
+Returns json data containing the torr details.
 
+- **URL**
 
+  /info or /i
 
+- **Method:**
 
+  `GET`
 
+- **URL Params**
 
+  **Required**
+
+  `torr-id=[string]`
+
+## **&#10158; Download Torr :**
+
+Returns a torrent file to
+
+- **URL**
+
+  /getorr-torr-id
+
+- **Method:**
+
+  `GET`
+
+- **URL Params**
+
+  **Required**
+
+  `torr-id=[string]`
+
+- **Example**
+
+  ![Alt Text](https://user-images.githubusercontent.com/54075838/118957373-18eaf000-b97e-11eb-9f2a-6bf98432cfd7.gif)
 
 </p>
 

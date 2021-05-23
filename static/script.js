@@ -24,8 +24,6 @@ var keyword = {
     {
       id: "torr-id",
       title: "torr-title",
-      size: "torr's size",
-      imdb: "torr imdb link",
     },
   ],
 };
