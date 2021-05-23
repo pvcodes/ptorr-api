@@ -34,7 +34,7 @@ class Torrent:
             print(f'{e}\n')
             return 'ERROR'
 
-    def get_Torr(self, key: str):
+    def get_Torr(self, key: str, count: int):
         status = self.login()
         keyword = {'search': key}
         resObj = {'_status': status, 'result': []}
@@ -58,16 +58,13 @@ class Torrent:
                 {'message': f'No torrent found for key={key}'})
 
         for r in results:
-            # size, imdb_id = self.getInfo(r['tfid'])
-            # if imdb_id:
-            #     imdb_id = f'https://www.imdb.com/title/tt{imdb_id}'
+            if not count:
+                break
             resObj['result'].append({
                 'title': f'{r.text}',
                 'id': f'{r["tfid"]}',
-                # 'size': size,
-                # 'imdb': imdb_id
             })
-
+            count -= 1
         return resObj
 
 # --------------------------------------------------------------------------------
@@ -111,14 +108,9 @@ class Torrent:
         for i in allTorr:
             id = i['tfid']
             title = self.getTitle(id)
-            # size, imdb_id = self.getInfo(id)
-            # if imdb_id:
-            #     imdb_id = f'https://www.imdb.com/title/tt{imdb_id}'
             resObj['result'].append({
                 'title': title,
                 'id': id,
-                # 'size': size,
-                # 'imdb': imdb_id
             })
         return resObj
 
@@ -134,44 +126,92 @@ class Torrent:
             # print(e)
             return None
 
-#     def getInfo(self, id: str):
-#         url = f'{self.indexURL}topics&id={id}'
-#         try:
-#             s = self.session.get(url, allow_redirects=True)
+    def getInfo(self, id: str):
+        status = self.login()
+        url = f'{self.indexURL}topics&id={id}'
+        resObj = {'_status': status, 'result': []}
+        try:
+            s = self.session.get(url, allow_redirects=True)
+            soup = BeautifulSoup(s.text, 'html.parser')
 
-#             soup = BeautifulSoup(s.text, 'html.parser')
+            title = soup.find('h3', {'class': 'torrent-title text-primary'})
+            title = title.get_text()
+            fileSizes = soup.select('div.col-md-2.details-files-filesize')
+            torrSZ = 0
+            for i in fileSizes:
+                i = i.get_text()
+                torrSZ += sizeInMB(i)
+            torrSZ = str(round(torrSZ, 2))+' GB'
 
-#             plot = soup.find('div', {'id': 'imdb-block', })
+            imdbID = None
+            scripts = soup.findAll('script')
+            for s in scripts:
+                if '$(document)' in str(s):
+                    imdbID = ''
+                    for c in str(s):
+                        if c.isdigit():
+                            imdbID += c
+                    break
+            imdbI = self.imdbINFO(imdbID)
+            if imdbI:
+                resObj['result'].append(imdbI)
+            else:
+                resObj['result'].append({})
+            resObj['result'][0]['title'] = title
+            resObj['result'][0]['size'] = torrSZ
+        except Exception as e:
+            resObj['_status'] = 'ERROR'
+            resObj['result'].append(e)
 
-#             imdb_id = None
-#             scripts = soup.findAll('script')
-#             for s in scripts:
-#                 if '$(document)' in str(s):
-#                     imdb_id = ''
-#                     for c in str(s):
-#                         if c.isdigit():
-#                             imdb_id += c
-#                     break
+        return resObj
 
-#             fileSizes = soup.select('div.col-md-2.details-files-filesize')
-#             size = 0
-#             for i in fileSizes:
-#                 i = i.get_text()
-#                 size += sizeInMB(i)
-#             return (str(round(size, 2))+' GB'), imdb_id
-#         except Exception as e:
-#             # print(e)
-#             print('RR')
-#             return None, None
+    def imdbINFO(self, imdbID: str):
+        # 4154796
+        url = f'https://www.imdb.com/title/tt{imdbID}/'
+        try:
+            s = requests.get(url)
+            # print(s.text)
+            print('-------------------------------------------------------- ')
+
+            soup = BeautifulSoup(s.text, 'html.parser')
+            plotSUMMARY = soup.find('div', {'class': 'summary_text'})
+            plotSUMMARY = plotSUMMARY.get_text()
+            plotSUMMARY = re.sub(r'^\s+|\s+$', '', plotSUMMARY)
+
+            allINFO = {
+                'director': [],
+                'writer': [],
+                'stars': [],
+                'plot': plotSUMMARY,
+                'IMDB': url
+            }
+
+            imdbI = soup.find('div', {'class': 'plot_summary'})
+            keyword = ['director', 'writer', 'stars']
+            imdbI = imdbI.findAll('h4')
+            for key in keyword:
+                for i in imdbI:
+                    if key in (i.get_text()).lower():
+                        i = i.find_next('a')
+                        i = i.get_text()
+                        i = re.sub(r'^\s+|\s+$', '', i)
+                        print(f'-----------\n{i}\n---------------')
+                        allINFO[key].append(i)
+            allINFO['cast'] = allINFO.pop('stars')
+
+            return allINFO
+        except Exception as e:
+            print(e)
+            return None
 
 
-# def sizeInMB(i: str):
-#     l = len(i)-2
-#     sz = i[l:]
-#     i = i[: -2]
-#     i = double(i)
-#     if sz == 'MB':
-#         i /= 1024
-#     elif sz == 'KB':
-#         i /= 1024*1024
-#     return i
+def sizeInMB(i: str):
+    l = len(i)-2
+    sz = i[l:]
+    i = i[: -2]
+    i = double(i)
+    if sz == 'MB':
+        i /= 1024
+    elif sz == 'KB':
+        i /= 1024*1024
+    return i

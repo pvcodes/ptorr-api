@@ -9,6 +9,7 @@ flask = "*"
 bs4 = "*"
 beautifulsoup4 = "*"
 requests = "*"
+numpy = "*"
 
 [dev-packages]
 
