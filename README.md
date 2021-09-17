@@ -241,3 +241,6 @@ Returns a torrent file to
 <div align="center">
 <a href="docs/LICENSE.md"><img src="https://img.shields.io/github/license/pvcodes/ptorr-api/?style=flat-square" alt="MIT license"></a>
 </div>
+
+
+#### Wandering why all the repos are forked from <b>[pvcodes-zz](https://github.com/pvcodes-zz)</b>. Read [here](https://github.com/pvcodes/github-repo-cloner#where-did-the-idea-came-from)
