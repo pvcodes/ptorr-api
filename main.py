@@ -1,3 +1,4 @@
+from logging import exception
 from os import listdir, set_blocking
 from flask import Flask, jsonify, send_from_directory, render_template, url_for
 import os
@@ -10,6 +11,14 @@ pvcodes = Torrent()
 PORT = os.environ.get('PORT') or 5057
 app = Flask(__name__, template_folder=f'{pvcodes.basePATH}/src/template')
 
+
+#Servers are Down
+server_down_obj = {
+            "_status": 'OK',
+            "result": [
+                'Servers are down'
+                ],
+        }
 
 @app.route('/')
 def root():
@@ -29,12 +38,16 @@ def getTorr(keyword, cnt='15'):
         return jsonify({'_status': 'OK', 'result': []})
     val = pvcodes.get_Torr(keyword, cnt)
     print(len(val['result']))
-    return jsonify(val)
+    # return jsonify(val)
+    return jsonify(server_down_obj)
 
-
+	
 @app.route('/getorr=<string:id>')
 def download_torr(id: str):
     val = pvcodes.downTorr(id)
+	
+    return jsonify(server_down_obj)
+
 
     if val == None:
         obj = {
@@ -49,7 +62,11 @@ def download_torr(id: str):
 @app.route('/recent')
 @app.route('/r')
 def getRecnt():
+    # try:
     obj = pvcodes.getRecent()
+    # except exception as e:
+        # print(e)
+    return jsonify(server_down_obj)
     return jsonify(obj)
 
 
@@ -59,6 +76,8 @@ def get_torr_info(id: str):
 
     resObj = pvcodes.getInfo(id)
     print(resObj['_status'])
+    
+    return jsonify(server_down_obj)
     return jsonify(resObj)
 
 

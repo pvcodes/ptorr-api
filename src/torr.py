@@ -1,4 +1,5 @@
 # Avi ki hai
+from logging import exception
 from numpy import double
 from os import listdir
 import re
@@ -15,7 +16,7 @@ class Torrent:
         self.CREDENTIALS = {
             # 'uid': os.getenv('UNAME'),
             # 'pwd': os.getenv('PSWRD')
-            'uid': os.environ.get('UNAME'),
+            '0': os.environ.get('UNAME'),
             'pwd': os.environ.get('PSWRD')
         }
         self.baseURL = 'https://chd4.com/'
@@ -104,15 +105,22 @@ class Torrent:
         resObj = {'_status': 'OK', 'result': []}
         soup = BeautifulSoup(s.text, 'html.parser')
         a = soup.find('ul', {'id': 'crazysl'})
-        allTorr = a.findAll('a')
-        for i in allTorr:
-            id = i['tfid']
-            title = self.getTitle(id)
-            resObj['result'].append({
-                'title': title,
-                'id': id,
-            })
+        with open("a.html","w+") as f:
+            f.write(str(soup))
+        # print("-------------------------------------------------------",soup,"-------------------------------------------------------")
+            if a:
+                allTorr = a.findAll('a')
+                for i in allTorr:
+                    id = i['tfid']
+                    title = self.getTitle(id)
+                    resObj['result'].append({
+                        'title': title,
+                        'id': id,
+                    })
+            else:
+                resObj['result'] = ['Something went wrong']
         return resObj
+
 
     def getTitle(self, id: str):
         url = f'{self.indexURL}topics&id={id}'
